@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -16,6 +17,8 @@ public class DailyLogGraph extends View {
 
     private int screenWidth;
     private int screenHeight;
+
+    private int graphStartingOffset;
 
     public DailyLogGraph(Context context) {
         super(context);
@@ -59,19 +62,48 @@ public class DailyLogGraph extends View {
         super.onDraw(canvas);
         canvas.drawPaint(canvasBackground);
         drawText(canvas, getDutyStatusText());
+        drawText(canvas, getUseLocalTimeText());
     }
 
     private void drawText(Canvas canvas, TextParams params){
         canvas.drawText(params.getText(), params.getX(), params.getY(), params.getTextPaint());
+
     }
 
     private TextParams getDutyStatusText(){
         return new TextParams(
                 0,
-                0,
+                getHeightOfText(textPaint),
                 "DUTY STATUS",
                 textPaint
         );
+    }
+
+    private TextParams getUseLocalTimeText() {
+        String text = "Use Local time Standard at Home Terminal";
+        int widthOfText = getWidthOfText(textPaint, text);
+        return new TextParams(
+                (screenWidth/2) - (widthOfText/2),
+                getHeightOfText(textPaint),
+                text,
+                textPaint
+        );
+    }
+
+    private int getHeightOfText(Paint paint){
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        int height = (int) (fm.descent - fm.ascent);
+        return height;
+    }
+
+    private int getWidthOfText(Paint paint, String text){
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        return bounds.width();
+    }
+
+    private int getWidthOfGraph(){
+        return screenWidth - 100;
     }
 }
 
