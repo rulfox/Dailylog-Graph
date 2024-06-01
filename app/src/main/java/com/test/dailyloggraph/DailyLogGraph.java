@@ -24,7 +24,7 @@ public class DailyLogGraph extends View {
     private int screenWidth, screenHeight;
 
     private float graphStartingOffset = 150;
-    private float graphEndingOffset = 100;
+    private float graphEndingOffset = 150;
 
     private float graphTopOffset = 30;
     private float graphBottomOffset = 100;
@@ -92,6 +92,51 @@ public class DailyLogGraph extends View {
         drawHoursInGraphAtBottom(canvas);
         drawDutyStatusLogs(canvas);
         drawDutyStatusText(canvas);
+        drawTotalText(canvas);
+        drawDutyStatusHoursCalculated(canvas);
+    }
+
+    private void drawDutyStatusHoursCalculated(Canvas canvas) {
+        if(dutyStatusLogs != null && dutyStatusLogs.length > 0){
+            int offDutyHours = 0;
+            int sleeperBirthHours = 0;
+            int drivingHours = 0;
+            int onDutyHours = 0;
+            for (DutyStatus dutyStatusLog : dutyStatusLogs) {
+                if(dutyStatusLog == DutyStatus.OFF_DUTY){
+                    offDutyHours++;
+                } else if(dutyStatusLog == DutyStatus.SLEEPER_BERTH){
+                    sleeperBirthHours++;
+                } else if(dutyStatusLog == DutyStatus.DRIVING){
+                    drivingHours++;
+                } else if(dutyStatusLog == DutyStatus.ON_DUTY){
+                    onDutyHours++;
+                }
+            }
+            drawText(canvas, getDutyStatusTextParams(DutyStatus.OFF_DUTY, offDutyHours));
+            drawText(canvas, getDutyStatusTextParams(DutyStatus.SLEEPER_BERTH, sleeperBirthHours));
+            drawText(canvas, getDutyStatusTextParams(DutyStatus.DRIVING, drivingHours));
+            drawText(canvas, getDutyStatusTextParams(DutyStatus.ON_DUTY, onDutyHours));
+        }
+    }
+
+    private TextParams getDutyStatusTextParams(DutyStatus dutyStatus, int totalHours){
+        return new TextParams(
+                (int) (graphStartingOffset + getWidthOfGraph() + 25),
+                (int) getYCoordinates(dutyStatus.getValue()) - 10,
+                String.valueOf(totalHours),
+                textPaint
+        );
+    }
+
+    private void drawTotalText(Canvas canvas) {
+        TextParams totalTextParams = new TextParams(
+                (int) (graphStartingOffset + getWidthOfGraph() + 25),
+                getHeightOfText(textPaint),
+                "Total Hours",
+                textPaint
+        );
+        drawText(canvas, totalTextParams);
     }
 
     private void drawDutyStatusText(Canvas canvas) {

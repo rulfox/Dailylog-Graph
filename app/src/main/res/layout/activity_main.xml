@@ -5,12 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="50dp"
+    android:background="@android:color/white"
+    android:paddingHorizontal="8dp"
     tools:context=".MainActivity">
 
     <com.test.dailyloggraph.DailyLogGraph
         android:id="@+id/dailyLogGraph"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
