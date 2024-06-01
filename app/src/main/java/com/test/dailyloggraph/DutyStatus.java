@@ -16,6 +16,22 @@ public enum DutyStatus {
 
     public int getValue() { return value; }
 
-    public String getText() { return text; }
+    public String getText() {
+        return text;
+    }
+
+    public static DutyStatus getDutyStatus(int value) {
+        switch (value){
+            case 1:
+                return OFF_DUTY;
+            case 2:
+                return SLEEPER_BERTH;
+            case 3:
+                return DRIVING;
+            case 4:
+                return ON_DUTY;
+        }
+        return ON_DUTY;
+    }
 }
 

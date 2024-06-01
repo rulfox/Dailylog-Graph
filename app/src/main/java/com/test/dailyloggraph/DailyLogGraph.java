@@ -16,7 +16,7 @@ public class DailyLogGraph extends View {
 
     Paint textPaint, textPaintForHours;
     Paint canvasBackground;
-    Paint linePaint;
+    Paint linePaint, dutyStatusLinePaint;
 
     private int screenWidth, screenHeight;
 
@@ -62,6 +62,10 @@ public class DailyLogGraph extends View {
         linePaint = new Paint();
         linePaint.setColor(Color.BLACK);
 
+        dutyStatusLinePaint = new Paint();
+        dutyStatusLinePaint.setColor(Color.RED);
+        dutyStatusLinePaint.setStrokeWidth(5f);
+
         canvasBackground = new Paint();
         canvasBackground.setColor(Color.WHITE);
         canvasBackground.setStyle(Paint.Style.FILL);
@@ -85,6 +89,21 @@ public class DailyLogGraph extends View {
         drawDutyStatusSectionLines(canvas);
         drawVerticalGraphLines(canvas);
         drawHoursInGraphAtBottom(canvas);
+        drawDutyStatusLogs(canvas);
+    }
+
+    private void drawDutyStatusLogs(Canvas canvas) {
+        if(dutyStatusLogs != null && dutyStatusLogs.length > 0){
+            for (int i = 0; i < dutyStatusLogs.length; i++) {
+                float y = getYCoordinates(dutyStatusLogs[i].getValue()) - ((float) graphUnitHeight /2);
+                float startX = getXCoordinates(i);
+                float endX = getXCoordinates(i);
+                if(i + 1 < dutyStatusLogs.length) {
+                    endX = getXCoordinates(i + 1);
+                }
+                canvas.drawLine(startX, y, endX, y, dutyStatusLinePaint);
+            }
+        }
     }
 
     private void drawVerticalGraphLines(Canvas canvas) {
