@@ -29,8 +29,6 @@ public class DailyLogGraph extends View {
     private float graphTopOffset = 30;
     private float graphBottomOffset = 100;
 
-    private int hoursTopOffset = 100;
-
     private int graphUnitHeight = 50;
 
     public DailyLogGraph(Context context) {
@@ -193,7 +191,7 @@ public class DailyLogGraph extends View {
         int widthOfText = getWidthOfText(textPaintForHours, String.valueOf(hour));
         return new TextParams(
                 (int) getXCoordinates(hour) - (widthOfText/2),
-                hoursTopOffset + getHeightOfText(textPaintForHours),
+                (int) (graphTopOffset + getHeightOfText(textPaintForHours)),
                 String.valueOf(hour),
                 textPaintForHours
         );
