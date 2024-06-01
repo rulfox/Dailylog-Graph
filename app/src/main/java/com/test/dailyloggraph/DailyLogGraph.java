@@ -14,11 +14,16 @@ public class DailyLogGraph extends View {
 
     Paint textPaint;
     Paint canvasBackground;
+    Paint linePaint;
 
     private int screenWidth;
     private int screenHeight;
 
-    private int graphStartingOffset;
+    private float graphStartingOffset = 100;
+    private float graphEndingOffset = 100;
+
+    private float graphTopOffset = 100;
+    private float graphBottomOffset = 100;
 
     public DailyLogGraph(Context context) {
         super(context);
@@ -45,6 +50,9 @@ public class DailyLogGraph extends View {
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(20);
 
+        linePaint = new Paint();
+        linePaint.setColor(Color.BLACK);
+
         canvasBackground = new Paint();
         canvasBackground.setColor(Color.WHITE);
         canvasBackground.setStyle(Paint.Style.FILL);
@@ -63,13 +71,16 @@ public class DailyLogGraph extends View {
         canvas.drawPaint(canvasBackground);
         drawText(canvas, getDutyStatusText());
         drawText(canvas, getUseLocalTimeText());
+
+        canvas.drawLine(getXCoordinates(0), graphTopOffset, getXCoordinates(24), graphTopOffset, linePaint);
     }
 
+    //This is used to draw text opn canvas
     private void drawText(Canvas canvas, TextParams params){
         canvas.drawText(params.getText(), params.getX(), params.getY(), params.getTextPaint());
-
     }
 
+    //This is used to get params for static text to be drawn on canvas
     private TextParams getDutyStatusText(){
         return new TextParams(
                 0,
@@ -79,6 +90,7 @@ public class DailyLogGraph extends View {
         );
     }
 
+    //This is used to get params for static text to be drawn on canvas
     private TextParams getUseLocalTimeText() {
         String text = "Use Local time Standard at Home Terminal";
         int widthOfText = getWidthOfText(textPaint, text);
@@ -90,20 +102,34 @@ public class DailyLogGraph extends View {
         );
     }
 
+    //This is used to calculate height of text based on paint used
     private int getHeightOfText(Paint paint){
         Paint.FontMetrics fm = paint.getFontMetrics();
         int height = (int) (fm.descent - fm.ascent);
         return height;
     }
 
+    //This is used to calculate width of text based on paint and text used
     private int getWidthOfText(Paint paint, String text){
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.width();
     }
 
-    private int getWidthOfGraph(){
-        return screenWidth - 100;
+    //This is used to get width of graph only
+    private float getWidthOfGraph(){
+        return screenWidth - graphStartingOffset - graphEndingOffset;
+    }
+
+    //This is used to get height of graph only
+    private float getHeightOfGraph(){
+        return screenWidth - graphStartingOffset - graphEndingOffset;
+    }
+
+    //This is used get x coordinates of hours
+    private float getXCoordinates(int hour){
+        if(hour == 0) return graphStartingOffset;
+        return (getWidthOfGraph() / 24) * hour;
     }
 }
 
@@ -134,5 +160,23 @@ class TextParams {
 
     public Paint getTextPaint() {
         return textPaint;
+    }
+}
+
+class Coordinates {
+    private int x;
+    private int y;
+
+    public Coordinates(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
