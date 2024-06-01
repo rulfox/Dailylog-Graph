@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 
 public class DailyLogGraph extends View {
 
+    DutyStatus[] dutyStatusLogs;
+
     Paint textPaint, textPaintForHours;
     Paint canvasBackground;
     Paint linePaint;
@@ -199,5 +201,9 @@ public class DailyLogGraph extends View {
 
     private float getTopYOffsetForGraphTopBaseLine(){
         return graphTopOffset + getHeightOfText(textPaintForHours) + 10;
+    }
+
+    public void setDutyStatusLogs(DutyStatus[] dutyStatusLogs) {
+        this.dutyStatusLogs = dutyStatusLogs;
     }
 }
