@@ -26,6 +26,8 @@ public class DailyLogGraph extends View {
 
     private int hoursTopOffset = 100;
 
+    private int graphUnitHeight = 50;
+
     public DailyLogGraph(Context context) {
         super(context);
         init();
@@ -76,14 +78,42 @@ public class DailyLogGraph extends View {
         canvas.drawPaint(canvasBackground);
         drawText(canvas, getDutyStatusText());
         drawText(canvas, getUseLocalTimeText());
-        for (int hour = 0; hour <= 24; hour++){
-            drawText(canvas, getTextParamsForHours(hour));
-        }
+        drawHoursInGraphAtTop(canvas);
         drawGraphTopBaseLine(canvas, linePaint);
+        drawDutyStatusSectionLines(canvas);
+        drawVerticalGraphLines(canvas);
+        drawHoursInGraphAtBottom(canvas);
+    }
+
+    private void drawVerticalGraphLines(Canvas canvas) {
+        for (int hour = 0; hour <= 24; hour++){
+            int x = (int) getXCoordinates(hour);
+            int startY = (int) getYCoordinates(0);
+            int endY = (int) getYCoordinates(4);
+            canvas.drawLine(x,startY,x,endY, linePaint);
+        }
+    }
+
+    private void drawDutyStatusSectionLines(Canvas canvas) {
+        for (int dutyStatus = 1; dutyStatus <= 4; dutyStatus++){
+            canvas.drawLine(getXCoordinates(0), getYCoordinates(dutyStatus), getXCoordinates(24), getYCoordinates(dutyStatus), linePaint);
+        }
+    }
+
+    private void drawHoursInGraphAtTop(Canvas canvas){
+        for (int hour = 0; hour <= 24; hour++){
+            drawText(canvas, getTextParamsForHoursAtStart(hour));
+        }
+    }
+
+    private void drawHoursInGraphAtBottom(Canvas canvas){
+        for (int hour = 0; hour <= 24; hour++){
+            drawText(canvas, getTextParamsForHoursAtEnd(hour));
+        }
     }
 
     private void drawGraphTopBaseLine(Canvas canvas, Paint linePaint) {
-        float coordinateYWithOffset = graphTopOffset + getHeightOfText(textPaintForHours) + 10;
+        float coordinateYWithOffset = getTopYOffsetForGraphTopBaseLine();
         canvas.drawLine(getXCoordinates(0), coordinateYWithOffset, getXCoordinates(24), coordinateYWithOffset, linePaint);
     }
 
@@ -114,11 +144,21 @@ public class DailyLogGraph extends View {
         );
     }
 
-    private TextParams getTextParamsForHours(int hour){
+    private TextParams getTextParamsForHoursAtStart(int hour){
         int widthOfText = getWidthOfText(textPaintForHours, String.valueOf(hour));
         return new TextParams(
                 (int) getXCoordinates(hour) - (widthOfText/2),
                 hoursTopOffset + getHeightOfText(textPaintForHours),
+                String.valueOf(hour),
+                textPaintForHours
+        );
+    }
+
+    private TextParams getTextParamsForHoursAtEnd(int hour){
+        int widthOfText = getWidthOfText(textPaintForHours, String.valueOf(hour));
+        return new TextParams(
+                (int) getXCoordinates(hour) - (widthOfText/2),
+                (int) getYCoordinates(4) + getHeightOfText(textPaintForHours),
                 String.valueOf(hour),
                 textPaintForHours
         );
@@ -152,34 +192,12 @@ public class DailyLogGraph extends View {
     private float getXCoordinates(int hour){
         return ((getWidthOfGraph() / 24) * hour) + graphStartingOffset;
     }
-}
 
-class TextParams {
-    private int x;
-    private int y;
-    private String text;
-    private Paint textPaint;
-
-    public TextParams(int x, int y, String text, Paint textPaint) {
-        this.x = x;
-        this.y = y;
-        this.text = text;
-        this.textPaint = textPaint;
+    private float getYCoordinates(int dutyStatusValue){
+        return (graphUnitHeight * dutyStatusValue) + getTopYOffsetForGraphTopBaseLine();
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public Paint getTextPaint() {
-        return textPaint;
+    private float getTopYOffsetForGraphTopBaseLine(){
+        return graphTopOffset + getHeightOfText(textPaintForHours) + 10;
     }
 }
