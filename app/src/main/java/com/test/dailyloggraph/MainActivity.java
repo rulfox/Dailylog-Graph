@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private DailyLogGraph dailyLogGraph;
-    private DutyStatus[] dutyStatusLogs = new DutyStatus[25];
+    private DutyStatus[] dutyStatusLogs = new DutyStatus[24];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,10 +23,15 @@ public class MainActivity extends AppCompatActivity {
             dutyStatusLogs[i] = DutyStatus.ON_DUTY;
         }
         dutyStatusLogs[0] = DutyStatus.ON_DUTY;
-        dutyStatusLogs[1] = DutyStatus.OFF_DUTY;
-        dutyStatusLogs[2] = DutyStatus.DRIVING;
-        dutyStatusLogs[3] = DutyStatus.DRIVING;
-        dutyStatusLogs[4] = DutyStatus.SLEEPER_BERTH;
+        dutyStatusLogs[1] = DutyStatus.DRIVING;
+        dutyStatusLogs[2] = DutyStatus.SLEEPER_BERTH;
+        dutyStatusLogs[3] = DutyStatus.OFF_DUTY;
+
+        dutyStatusLogs[20] = DutyStatus.ON_DUTY;
+        dutyStatusLogs[21] = DutyStatus.DRIVING;
+        dutyStatusLogs[22] = DutyStatus.SLEEPER_BERTH;
+        dutyStatusLogs[23] = DutyStatus.OFF_DUTY;
+
         dailyLogGraph.setDutyStatusLogs(dutyStatusLogs);
     }
 }

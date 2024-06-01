@@ -10,6 +10,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DailyLogGraph extends View {
 
     DutyStatus[] dutyStatusLogs;
@@ -94,14 +97,18 @@ public class DailyLogGraph extends View {
 
     private void drawDutyStatusLogs(Canvas canvas) {
         if(dutyStatusLogs != null && dutyStatusLogs.length > 0){
+            List<Coordinates> coordinates = new ArrayList<>();
             for (int i = 0; i < dutyStatusLogs.length; i++) {
-                float y = getYCoordinates(dutyStatusLogs[i].getValue()) - ((float) graphUnitHeight /2);
-                float startX = getXCoordinates(i);
-                float endX = getXCoordinates(i);
-                if(i + 1 < dutyStatusLogs.length) {
-                    endX = getXCoordinates(i + 1);
+                coordinates.add(new Coordinates(
+                        getXCoordinates(i),
+                        getYCoordinates(dutyStatusLogs[i].getValue()) - ((float) graphUnitHeight /2)
+                ));
+            }
+            for (int i = 0; i < coordinates.size(); i++) {
+                canvas.drawLine(coordinates.get(i).getX(), coordinates.get(i).getY(), coordinates.get(i).getX() + (getWidthOfGraph() / 24), coordinates.get(i).getY(), dutyStatusLinePaint);
+                if(i+1 < coordinates.size()){
+                    canvas.drawLine(coordinates.get(i).getX() + (getWidthOfGraph() / 24), coordinates.get(i).getY(), coordinates.get(i).getX() + (getWidthOfGraph() / 24), coordinates.get(i+1).getY(), dutyStatusLinePaint);
                 }
-                canvas.drawLine(startX, y, endX, y, dutyStatusLinePaint);
             }
         }
     }
