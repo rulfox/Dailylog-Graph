@@ -12,18 +12,19 @@ import androidx.annotation.Nullable;
 
 public class DailyLogGraph extends View {
 
-    Paint textPaint;
+    Paint textPaint, textPaintForHours;
     Paint canvasBackground;
     Paint linePaint;
 
-    private int screenWidth;
-    private int screenHeight;
+    private int screenWidth, screenHeight;
 
-    private float graphStartingOffset = 100;
+    private float graphStartingOffset = 300;
     private float graphEndingOffset = 100;
 
     private float graphTopOffset = 100;
     private float graphBottomOffset = 100;
+
+    private int hoursTopOffset = 100;
 
     public DailyLogGraph(Context context) {
         super(context);
@@ -50,6 +51,10 @@ public class DailyLogGraph extends View {
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(20);
 
+        textPaintForHours = new Paint();
+        textPaintForHours.setColor(Color.BLACK);
+        textPaintForHours.setTextSize(16);
+
         linePaint = new Paint();
         linePaint.setColor(Color.BLACK);
 
@@ -71,8 +76,15 @@ public class DailyLogGraph extends View {
         canvas.drawPaint(canvasBackground);
         drawText(canvas, getDutyStatusText());
         drawText(canvas, getUseLocalTimeText());
+        for (int hour = 0; hour <= 24; hour++){
+            drawText(canvas, getTextParamsForHours(hour));
+        }
+        drawGraphTopBaseLine(canvas, linePaint);
+    }
 
-        canvas.drawLine(getXCoordinates(0), graphTopOffset, getXCoordinates(24), graphTopOffset, linePaint);
+    private void drawGraphTopBaseLine(Canvas canvas, Paint linePaint) {
+        float coordinateYWithOffset = graphTopOffset + getHeightOfText(textPaintForHours) + 10;
+        canvas.drawLine(getXCoordinates(0), coordinateYWithOffset, getXCoordinates(24), coordinateYWithOffset, linePaint);
     }
 
     //This is used to draw text opn canvas
@@ -102,6 +114,16 @@ public class DailyLogGraph extends View {
         );
     }
 
+    private TextParams getTextParamsForHours(int hour){
+        int widthOfText = getWidthOfText(textPaintForHours, String.valueOf(hour));
+        return new TextParams(
+                (int) getXCoordinates(hour) - (widthOfText/2),
+                hoursTopOffset + getHeightOfText(textPaintForHours),
+                String.valueOf(hour),
+                textPaintForHours
+        );
+    }
+
     //This is used to calculate height of text based on paint used
     private int getHeightOfText(Paint paint){
         Paint.FontMetrics fm = paint.getFontMetrics();
@@ -128,8 +150,7 @@ public class DailyLogGraph extends View {
 
     //This is used get x coordinates of hours
     private float getXCoordinates(int hour){
-        if(hour == 0) return graphStartingOffset;
-        return (getWidthOfGraph() / 24) * hour;
+        return ((getWidthOfGraph() / 24) * hour) + graphStartingOffset;
     }
 }
 
@@ -160,23 +181,5 @@ class TextParams {
 
     public Paint getTextPaint() {
         return textPaint;
-    }
-}
-
-class Coordinates {
-    private int x;
-    private int y;
-
-    public Coordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 }
