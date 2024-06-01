@@ -23,10 +23,10 @@ public class DailyLogGraph extends View {
 
     private int screenWidth, screenHeight;
 
-    private float graphStartingOffset = 300;
+    private float graphStartingOffset = 150;
     private float graphEndingOffset = 100;
 
-    private float graphTopOffset = 100;
+    private float graphTopOffset = 30;
     private float graphBottomOffset = 100;
 
     private int hoursTopOffset = 100;
@@ -93,6 +93,23 @@ public class DailyLogGraph extends View {
         drawVerticalGraphLines(canvas);
         drawHoursInGraphAtBottom(canvas);
         drawDutyStatusLogs(canvas);
+        drawDutyStatusText(canvas);
+    }
+
+    private void drawDutyStatusText(Canvas canvas) {
+        drawText(canvas, getDutyStatusTextParams(DutyStatus.OFF_DUTY));
+        drawText(canvas, getDutyStatusTextParams(DutyStatus.SLEEPER_BERTH));
+        drawText(canvas, getDutyStatusTextParams(DutyStatus.DRIVING));
+        drawText(canvas, getDutyStatusTextParams(DutyStatus.ON_DUTY));
+    }
+
+    private TextParams getDutyStatusTextParams(DutyStatus dutyStatus){
+        return new TextParams(
+                0,
+                (int) getYCoordinates(dutyStatus.getValue()) - 10,
+                dutyStatus.getText(),
+                textPaint
+        );
     }
 
     private void drawDutyStatusLogs(Canvas canvas) {
